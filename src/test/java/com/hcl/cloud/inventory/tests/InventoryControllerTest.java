@@ -41,44 +41,42 @@ public class InventoryControllerTest {
       @MockBean
       private InventoryService service;
 
-    @Test
-    @DisplayName("Get  /api/inventory/I001 - Found")
-    public void testGetInventoryByProductCodeFound() throws Exception {
-        InventoryItem mockItem =
-                new InventoryItem("arqw42343", "I001", 12, true);
-        doReturn(Optional.of(mockItem))
-                .when(service)
-                .getInventoryItem("I001");
-
-        mockMvc.perform(get("/api/inventory/{productCode}", "I001"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.productCode",is("I001")))
-                .andExpect(jsonPath("$.quantity",is(12)))
-                .andExpect(jsonPath("$.activeStatus",is(true)))
-                .andExpect(jsonPath("$.inStock",is(true)));
-
-    }
-
-    @Test
-    @DisplayName("Get /api/inventory/I002 - Not Found")
-    public void testGetInventoryByProductCodeNotFound() throws Exception{
-    
-    	 ApiRuntimeException mockItem =
-    			 new ApiRuntimeException(404, 404, "Product does not Exists");
-         doThrow(mockItem)
-                 .when(service)
-                 .getInventoryItem("I002");
-         
-        mockMvc.perform(get("/api/inventory/{productCode}", "I002"))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.code",is(404)))
-                .andExpect(jsonPath("$.message",is("Product does not Exists")));
-
-
-    }
-    
+	/*
+	 * @Test
+	 * 
+	 * @DisplayName("Get  /api/inventory/I001 - Found") public void
+	 * testGetInventoryByProductCodeFound() throws Exception { InventoryItem
+	 * mockItem = new InventoryItem("arqw42343", "I001", 12, true);
+	 * doReturn(Optional.of(mockItem)) .when(service) .getInventoryItem("I001");
+	 * 
+	 * mockMvc.perform(get("/api/inventory/{productCode}", "I001"))
+	 * .andExpect(status().isOk())
+	 * .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	 * .andExpect(jsonPath("$.productCode",is("I001")))
+	 * .andExpect(jsonPath("$.quantity",is(12)))
+	 * .andExpect(jsonPath("$.activeStatus",is(true)))
+	 * .andExpect(jsonPath("$.inStock",is(true)));
+	 * 
+	 * }
+	 * 
+	 * @Test
+	 * 
+	 * @DisplayName("Get /api/inventory/I002 - Not Found") public void
+	 * testGetInventoryByProductCodeNotFound() throws Exception{
+	 * 
+	 * ApiRuntimeException mockItem = new ApiRuntimeException(404, 404,
+	 * "Product does not Exists"); doThrow(mockItem) .when(service)
+	 * .getInventoryItem("I002");
+	 * 
+	 * mockMvc.perform(get("/api/inventory/{productCode}", "I002"))
+	 * .andExpect(status().isNotFound())
+	 * .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	 * .andExpect(jsonPath("$.code",is(404)))
+	 * .andExpect(jsonPath("$.message",is("Product does not Exists")));
+	 * 
+	 * 
+	 * }
+	 */    
 	/*
 	 * @Test public void createInventoryServiceTest() { InventoryItem item=new
 	 * InventoryItem(); item.setSkuCode("IASDSA"); item.setActiveStatus(true);
