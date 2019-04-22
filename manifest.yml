@@ -7,3 +7,5 @@ applications:
   random-route: true
   buildpacks:
     - java_buildpack
+  services:
+    - dbService
