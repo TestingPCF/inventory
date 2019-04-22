@@ -26,12 +26,6 @@ public class InventoryController {
 
 	@Autowired
 	private InventoryService invetoryService;
-	
-	// private List<InventoryItem> inventoryItemList=new ArrayList<InventoryItem>();
-
-	public void setInvetoryService(InventoryService invetoryService) {
-		this.invetoryService = invetoryService;
-	}
 
 	@RequestMapping(value = "/api/inventory", method = RequestMethod.POST)
 	public ResponseEntity<InventoryItemResponse> createInventory(@RequestBody InventoryItemRequest item)
@@ -46,7 +40,7 @@ public class InventoryController {
 	public ResponseEntity<InventoryItemResponse> getInventoryItem(@PathVariable("productCode") String productCode) {
 		log.info("Get Inventory api called..{}", productCode);
 		final Optional<InventoryItem> existingItem = invetoryService.getInventoryItem(productCode);
-	    return new ResponseEntity<InventoryItemResponse>(InventoryItemResponse.from(existingItem.get()), HttpStatus.OK);
+		return new ResponseEntity<InventoryItemResponse>(InventoryItemResponse.from(existingItem.get()), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/api/inventory", method = RequestMethod.GET)
