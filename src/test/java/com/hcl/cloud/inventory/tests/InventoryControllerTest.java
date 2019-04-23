@@ -46,10 +46,10 @@ public class InventoryControllerTest {
 	@DisplayName("Get  /api/inventory/I001 - Found")
 	public void testGetInventoryByProductCodeFound() throws Exception {
 		InventoryItem mockItem = new InventoryItem("arqw42343", "I001", 12, true);
-
 		doReturn(Optional.of(mockItem)).when(service).getInventoryItem("I001");
 
-		mockMvc.perform(get("/api/inventory/{productCode}", "I001")).andExpect(status().isOk())
+		mockMvc.perform(get("/api/inventory/{productCode}", "I001"))
+				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$.skuCode", is("I001")))
 				.andExpect(jsonPath("$.quantity", is(12)))
