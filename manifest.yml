@@ -4,11 +4,8 @@ applications:
   path: target/inventory-0.0.1-SNAPSHOT.jar
   memory: 750M
   instances: 1
-  disk_quota: 750M
   random-route: true
   buildpacks:
     - java_buildpack
   services:
     - dbService
-  env: 
-      ROSTER_A: Value_1

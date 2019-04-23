@@ -65,8 +65,8 @@ public class InventoryController {
 			throws ApiRuntimeException {
 		log.info("Update Inventory api called.");
 
-		final Optional<InventoryItem> existingItem = invetoryService.getInventoryItem(item.getProductCode());
-		log.info("Item {} already exist.", item.getProductCode());
+		final Optional<InventoryItem> existingItem = invetoryService.getInventoryItem(item.getSkuCode());
+		log.info("Item {} already exist.", item.getSkuCode());
 
 		existingItem.get().setQuantity(item.getQuantity());
 		return new ResponseEntity<InventoryItemResponse>(

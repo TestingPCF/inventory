@@ -9,12 +9,12 @@ import lombok.*;
 @Getter
 @ToString
 public class InventoryItemRequest {
-    private String productCode;
+    private String skuCode;
     private long quantity;
 
     public static InventoryItem from(final InventoryItemRequest request) {
         return InventoryItem.builder()
-                .skuCode(request.getProductCode())
+                .skuCode(request.getSkuCode())
                 .quantity(request.getQuantity())
                 .build();
     }

@@ -16,14 +16,14 @@ import lombok.Setter;
 @AllArgsConstructor
 public class InventoryItemResponse {
 
-    private String productCode;
+    private String skuCode;
     private long quantity;
     private boolean activeStatus;
     private boolean inStock;
 
     public static InventoryItemResponse from(InventoryItem item) {
         return InventoryItemResponse.builder()
-                .productCode(item.getSkuCode())
+                .skuCode(item.getSkuCode())
                 .quantity(item.getQuantity())
                 .activeStatus(item.isActiveStatus())
                 .inStock(item.getQuantity() > 0 ? true : false)
