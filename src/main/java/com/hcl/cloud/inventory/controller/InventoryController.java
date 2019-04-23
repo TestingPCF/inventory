@@ -1,6 +1,5 @@
 package com.hcl.cloud.inventory.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class InventoryController {
 
+	
+	
 	@Autowired
 	private InventoryService invetoryService;
+	
 
 	@RequestMapping(value = "/api/inventory", method = RequestMethod.POST)
 	public ResponseEntity<InventoryItemResponse> createInventory(@RequestBody InventoryItemRequest item)
@@ -43,13 +45,13 @@ public class InventoryController {
 		return new ResponseEntity<InventoryItemResponse>(InventoryItemResponse.from(existingItem.get()), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/api/inventory", method = RequestMethod.GET)
-	public ResponseEntity<List<InventoryItemResponse>> getAllInventory() {
-		log.info("Get all Inventory item api called");
-		final List<InventoryItem> existingItems = invetoryService.findAllInventory();
-		return new ResponseEntity<List<InventoryItemResponse>>(InventoryItemResponse.from(existingItems),
-				HttpStatus.OK);
-	}
+//	@RequestMapping(value = "/api/inventory", method = RequestMethod.GET)
+//	public ResponseEntity<List<InventoryItemResponse>> getAllInventory() {
+//		log.info("Get all Inventory item api called");
+//		final List<InventoryItem> existingItems = invetoryService.findAllInventory();
+//		return new ResponseEntity<List<InventoryItemResponse>>(InventoryItemResponse.from(existingItems),
+//				HttpStatus.OK);
+//	}
 
 	/*
 	 * @RequestMapping(value = "/api/inventory/updateInventory", method =
@@ -83,16 +85,17 @@ public class InventoryController {
 	 * 10, false), HttpStatus.OK); }
 	 */
 
-	@RequestMapping(value = "/api/inventory/{productCode}", method = RequestMethod.DELETE)
-	public ResponseEntity<InventoryItemResponse> deleteInventory(@PathVariable("productCode") String productCode)
-			throws ApiRuntimeException {
-		log.info("Delete Inventory api called.");
-		final Optional<InventoryItem> existingItem = invetoryService.getInventoryItem(productCode);
-		log.info("Item {} already exist.", productCode);
-		existingItem.get().setActiveStatus(false);
-		return new ResponseEntity<InventoryItemResponse>(
-				InventoryItemResponse.from(invetoryService.updateInventory(existingItem.get())), HttpStatus.OK);
-
-	}
-
+//	@RequestMapping(value = "/api/inventory/{productCode}", method = RequestMethod.DELETE)
+//	public ResponseEntity<InventoryItemResponse> deleteInventory(@PathVariable("productCode") String productCode)
+//			throws ApiRuntimeException {
+//		log.info("Delete Inventory api called.");
+//		final Optional<InventoryItem> existingItem = invetoryService.getInventoryItem(productCode);
+//		log.info("Item {} already exist.", productCode);
+//		existingItem.get().setActiveStatus(false);
+//		return new ResponseEntity<InventoryItemResponse>(
+//				InventoryItemResponse.from(invetoryService.updateInventory(existingItem.get())), HttpStatus.OK);
+//
+//	}
+	
+	
 }
