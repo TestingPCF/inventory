@@ -34,7 +34,7 @@ public class InventoryController {
 	public ResponseEntity<InventoryItemResponse> createInventory(@RequestBody InventoryItemRequest item)
 			throws ApiRuntimeException {
 		return new ResponseEntity<InventoryItemResponse>(
-				InventoryItemResponse.from(invetoryService.saveInventory(InventoryItemRequest.from(item))),
+				InventoryItemResponse.from(invetoryService.saveOrUpdateInventory(InventoryItemRequest.from(item))),
 				HttpStatus.CREATED);
 
 	}
@@ -64,12 +64,12 @@ public class InventoryController {
 			throws ApiRuntimeException {
 		log.info("Update Inventory api called.");
 
-		final Optional<InventoryItem> existingItem = invetoryService.getInventoryItem(item.getSkuCode());
-		log.info("Item {} already exist.", item.getSkuCode());
+//		final Optional<InventoryItem> existingItem = invetoryService.getInventoryItem(item.getSkuCode());
+//		log.info("Item {} already exist.", item.getSkuCode());
 
-		existingItem.get().setQuantity(item.getQuantity());
+		//existingItem.get().setQuantity(item.getQuantity());
 		return new ResponseEntity<InventoryItemResponse>(
-				InventoryItemResponse.from(invetoryService.updateInventory(existingItem.get())), HttpStatus.ACCEPTED);
+				InventoryItemResponse.from(invetoryService.updateInventory(item)), HttpStatus.ACCEPTED);
 
 	}	
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.hcl.cloud.inventory.dto.InventoryItem;
+import com.hcl.cloud.inventory.dto.InventoryItemRequest;
 
 @Service
 @Component
@@ -16,8 +17,8 @@ public interface InventoryService {
 
     public Optional<InventoryItem> getInventoryItem(final String productCode);
 
-    public InventoryItem saveInventory(final InventoryItem item);
+    public InventoryItem saveOrUpdateInventory(final InventoryItem item);
     
-    public InventoryItem updateInventory(final InventoryItem item);
+    public InventoryItem updateInventory(final InventoryItemRequest item);
 
 }

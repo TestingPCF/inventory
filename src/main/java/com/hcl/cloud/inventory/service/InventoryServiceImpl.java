@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hcl.cloud.inventory.dto.InventoryItem;
+import com.hcl.cloud.inventory.dto.InventoryItemRequest;
 import com.hcl.cloud.inventory.exception.ApiRuntimeException;
 import com.hcl.cloud.inventory.repository.InventoryRepository;
 
@@ -27,29 +28,53 @@ public class InventoryServiceImpl implements InventoryService {
 
 		final Optional<InventoryItem> existingItem = repository.findBySkuCodeAndActiveStatus(productCode, true);
 		if (!existingItem.isPresent()) {
-			log.error("Error {} already exist.", existingItem);
+			log.error("Error {} Product does not exist.", existingItem);
 			throw new ApiRuntimeException(404, 404, "Product does not Exists");
 		}
 
 		return existingItem;
 	}
 
-	public InventoryItem saveInventory(final InventoryItem item) {
-		final Optional<InventoryItem> existingItem = repository.findBySkuCodeAndActiveStatus(item.getSkuCode(), true);
+	public InventoryItem saveOrUpdateInventory(final InventoryItem item) {
+		final Optional<InventoryItem> existingItem = repository.findBySkuCode(item.getSkuCode());
 		if (existingItem.isPresent()) {
-			log.error("Error {} already exist.", item.getSkuCode());
-			throw new ApiRuntimeException(400, 400, "Product already Exists");
+			log.info("Item already present updating quantity");
+			InventoryItem currentItem=existingItem.get();
+			currentItem.setQuantity(item.getQuantity());
+			if(currentItem.getQuantity()>0l)currentItem.setActiveStatus(true);
+			return repository.save(currentItem);
 		}
+		else {
+			log.info("Adding item to inventory");
 		item.setActiveStatus(true);
 		return repository.save(item);
+		}
 	}
 
-	public InventoryItem updateInventory(final InventoryItem item) {
+	public InventoryItem updateInventory(final InventoryItemRequest item) {
 		if (item.getQuantity() < 0) {
 			log.error("Error {} Negative quantity {}", item.getSkuCode(), item.getQuantity());
 			throw new ApiRuntimeException(400, 400, "Negative quantity");
 		}
-		return repository.save(item);
+		Optional<InventoryItem> existingItem=getInventoryItem(item.getSkuCode());
+		if (!existingItem.isPresent()) {
+			log.error("Error {} doesn't exist.", existingItem);
+			throw new ApiRuntimeException(404, 404, "Product does not Exists");
+		}
+		InventoryItem currentItem= existingItem.get();
+		
+		long quantity=currentItem.getQuantity();
+		if(quantity<item.getQuantity()) {
+			log.error("Error {} Insufficient Inventory.", existingItem);
+			throw new ApiRuntimeException(404, 404, " Insufficient Inventory.");
+		}
+		currentItem.setQuantity(quantity-item.getQuantity());
+		if(currentItem.getQuantity()==0l) {
+			currentItem.setActiveStatus(false);
+		}
+		return repository.save(currentItem);
 	}
+
+	
 
 }
