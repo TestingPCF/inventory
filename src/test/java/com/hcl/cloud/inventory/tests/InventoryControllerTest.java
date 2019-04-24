@@ -48,7 +48,7 @@ public class InventoryControllerTest {
 		InventoryItem mockItem = new InventoryItem("arqw42343", "I001", 12, true);
 		doReturn(Optional.of(mockItem)).when(service).getInventoryItem("I001");
 
-		mockMvc.perform(get("/api/inventory/{productCode}", "I001"))
+		mockMvc.perform(get("/inventory/{productCode}", "I001"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$.skuCode", is("I001")))
@@ -66,7 +66,7 @@ public class InventoryControllerTest {
 
 		doThrow(mockItem).when(service).getInventoryItem("I002");
 
-		mockMvc.perform(get("/api/inventory/{productCode}", "I002"))
+		mockMvc.perform(get("/inventory/{productCode}", "I002"))
 				.andExpect(status().isNotFound())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$.code", is(404)))
@@ -86,7 +86,7 @@ public class InventoryControllerTest {
         doReturn(mockItem)
                 .when(service).saveInventory(any());
 
-        mockMvc.perform(post("/api/inventory")
+        mockMvc.perform(post("/inventory")
                .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(inventoryRequest)))
                 .andExpect(status().isCreated())
@@ -114,7 +114,7 @@ public class InventoryControllerTest {
         doReturn(mockItem)
                 .when(service).updateInventory(any());
 
-        mockMvc.perform(put("/api/inventory")
+        mockMvc.perform(put("/inventory")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(inventoryRequest)))
                 .andExpect(status().isAccepted())
