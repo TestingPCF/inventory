@@ -45,23 +45,6 @@ public class InventoryController {
 		return new ResponseEntity<InventoryItemResponse>(InventoryItemResponse.from(existingItem.get()), HttpStatus.OK);
 	}
 
-//	@RequestMapping(value = "/api/inventory", method = RequestMethod.GET)
-//	public ResponseEntity<List<InventoryItemResponse>> getAllInventory() {
-//		log.info("Get all Inventory item api called");
-//		final List<InventoryItem> existingItems = invetoryService.findAllInventory();
-//		return new ResponseEntity<List<InventoryItemResponse>>(InventoryItemResponse.from(existingItems),
-//				HttpStatus.OK);
-//	}
-
-	/*
-	 * @RequestMapping(value = "/api/inventory/updateInventory", method =
-	 * RequestMethod.PUT) public ResponseEntity<InventoryItem>
-	 * updateInventoryItems(@RequestBody InventoryItemRequest item) {
-	 * 
-	 * return new ResponseEntity<InventoryItem>(new InventoryItem("100", "INV1000",
-	 * 10, true), HttpStatus.OK); }
-	 */
-
 	@RequestMapping(value = "/api/inventory", method = RequestMethod.PUT)
 	public ResponseEntity<InventoryItemResponse> updateInventory(@RequestBody InventoryItemRequest item)
 			throws ApiRuntimeException {
@@ -74,28 +57,5 @@ public class InventoryController {
 		return new ResponseEntity<InventoryItemResponse>(
 				InventoryItemResponse.from(invetoryService.updateInventory(existingItem.get())), HttpStatus.ACCEPTED);
 
-	}
-
-	/*
-	 * @RequestMapping(value = "/api/inventory/deleteInventory/{productCode}",
-	 * method = RequestMethod.DELETE) public ResponseEntity<InventoryItem>
-	 * deleteInventoryItems(@PathVariable("productCode") String productCode) {
-	 * 
-	 * return new ResponseEntity<InventoryItem>(new InventoryItem("100", "INV1000",
-	 * 10, false), HttpStatus.OK); }
-	 */
-
-//	@RequestMapping(value = "/api/inventory/{productCode}", method = RequestMethod.DELETE)
-//	public ResponseEntity<InventoryItemResponse> deleteInventory(@PathVariable("productCode") String productCode)
-//			throws ApiRuntimeException {
-//		log.info("Delete Inventory api called.");
-//		final Optional<InventoryItem> existingItem = invetoryService.getInventoryItem(productCode);
-//		log.info("Item {} already exist.", productCode);
-//		existingItem.get().setActiveStatus(false);
-//		return new ResponseEntity<InventoryItemResponse>(
-//				InventoryItemResponse.from(invetoryService.updateInventory(existingItem.get())), HttpStatus.OK);
-//
-//	}
-	
-	
+	}	
 }
