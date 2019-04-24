@@ -48,7 +48,7 @@ public class InventoryControllerTest {
 		InventoryItem mockItem = new InventoryItem("arqw42343", "I001", 12, true);
 		doReturn(Optional.of(mockItem)).when(service).getInventoryItem("I001");
 
-		mockMvc.perform(get("/inventory/{productCode}", "I001"))
+		mockMvc.perform(get("/{productCode}", "I001"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$.skuCode", is("I001")))
@@ -66,7 +66,7 @@ public class InventoryControllerTest {
 
 		doThrow(exception).when(service).getInventoryItem("I002");
 
-		mockMvc.perform(get("/inventory/{productCode}", "I002"))
+		mockMvc.perform(get("/{productCode}", "I002"))
 				.andExpect(status().isNotFound())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$.code", is(404)))
@@ -87,7 +87,7 @@ public class InventoryControllerTest {
         doReturn(mockItem)
                 .when(service).saveOrUpdateInventory(any());
 
-        mockMvc.perform(post("/inventory")
+        mockMvc.perform(post("")
                .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(inventoryRequest)))
                 .andExpect(status().isCreated())
@@ -110,7 +110,7 @@ public class InventoryControllerTest {
         doThrow(exception)
                 .when(service).saveOrUpdateInventory(any());
 
-        mockMvc.perform(post("/inventory")
+        mockMvc.perform(post("")
                .contentType(MediaType.APPLICATION_JSON)
                .content(asJsonString(inventoryRequest)))
                .andExpect(status().isBadRequest())
@@ -127,17 +127,13 @@ public class InventoryControllerTest {
     public void testUpateInventory() throws Exception{
 
         InventoryItemRequest inventoryRequest = new InventoryItemRequest("I003",12);
-        InventoryItem mockItem =
-                new InventoryItem("product1231", "I003", 12, true);
+        InventoryItem mockItem = new InventoryItem("product1231", "I003", 12, true);
 
-        doReturn(Optional.of(mockItem))
-                .when(service)
-                .getInventoryItem("I003");
+        doReturn(Optional.of(mockItem)).when(service).getInventoryItem("I003");
 
-        doReturn(mockItem)
-                .when(service).updateInventory(any());
+        doReturn(mockItem).when(service).updateInventory(any());
 
-        mockMvc.perform(put("/inventory")
+        mockMvc.perform(put("")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(inventoryRequest)))
                 .andExpect(status().isAccepted())
