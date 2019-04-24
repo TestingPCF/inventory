@@ -10,3 +10,4 @@ applications:
     - java_buildpack
   services:
     - dbService
+    - log-drain
