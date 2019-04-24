@@ -62,9 +62,9 @@ public class InventoryControllerTest {
 	@DisplayName("Get /api/inventory/I002 - Not Found")
 	public void testGetInventoryByProductCodeNotFound() throws Exception {
 
-		ApiRuntimeException mockItem = new ApiRuntimeException(404, 404, "Product does not Exists");
+		ApiRuntimeException exception = new ApiRuntimeException(404, 404, "Product does not Exists");
 
-		doThrow(mockItem).when(service).getInventoryItem("I002");
+		doThrow(exception).when(service).getInventoryItem("I002");
 
 		mockMvc.perform(get("/inventory/{productCode}", "I002"))
 				.andExpect(status().isNotFound())
@@ -75,16 +75,17 @@ public class InventoryControllerTest {
 	}
 	
 	
+	
+	
 	@Test
     @DisplayName("Post /api/inventory -- Create Inventory")
     public void testCreateInventory() throws Exception{
 
         InventoryItemRequest inventoryRequest = new InventoryItemRequest("I003",10);
-        InventoryItem mockItem =
-                new InventoryItem("product1231", "I003", 10, true);
+        InventoryItem mockItem = new InventoryItem("product1231", "I003", 10, true);
 
         doReturn(mockItem)
-                .when(service).saveInventory(any());
+                .when(service).saveOrUpdateInventory(any());
 
         mockMvc.perform(post("/inventory")
                .contentType(MediaType.APPLICATION_JSON)
@@ -95,6 +96,28 @@ public class InventoryControllerTest {
                 .andExpect(jsonPath("$.quantity",is(10)))
                 .andExpect(jsonPath("$.activeStatus",is(true)))
                 .andExpect(jsonPath("$.inStock",is(true)));
+
+
+    }
+	
+	@Test
+    @DisplayName("Post /api/inventory -- Inventory Not Created")
+    public void testInventoryAlreadyCreatedError() throws Exception{
+
+		InventoryItemRequest inventoryRequest = new InventoryItemRequest("I003",10);
+		ApiRuntimeException exception = new ApiRuntimeException(400, 400, "Product already Exists");
+
+        doThrow(exception)
+                .when(service).saveOrUpdateInventory(any());
+
+        mockMvc.perform(post("/inventory")
+               .contentType(MediaType.APPLICATION_JSON)
+               .content(asJsonString(inventoryRequest)))
+               .andExpect(status().isBadRequest())
+               .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+               .andExpect(jsonPath("$.code", is(400)))
+               .andExpect(jsonPath("$.message", is("Product already Exists")));
+              
 
 
     }
