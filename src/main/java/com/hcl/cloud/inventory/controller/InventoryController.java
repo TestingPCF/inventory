@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
+@RequestMapping(value = "/inventory")
 public class InventoryController {
 
 	
@@ -29,7 +30,7 @@ public class InventoryController {
 	private InventoryService invetoryService;
 	
 
-	@RequestMapping(value = "/api/inventory", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<InventoryItemResponse> createInventory(@RequestBody InventoryItemRequest item)
 			throws ApiRuntimeException {
 		return new ResponseEntity<InventoryItemResponse>(
@@ -38,14 +39,14 @@ public class InventoryController {
 
 	}
 
-	@RequestMapping(value = "/api/inventory/{productCode}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{productCode}", method = RequestMethod.GET)
 	public ResponseEntity<InventoryItemResponse> getInventoryItem(@PathVariable("productCode") String productCode) {
 		log.info("Get Inventory api called..{}", productCode);
 		final Optional<InventoryItem> existingItem = invetoryService.getInventoryItem(productCode);
 		return new ResponseEntity<InventoryItemResponse>(InventoryItemResponse.from(existingItem.get()), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/api/inventory", method = RequestMethod.PUT)
+	@RequestMapping(method = RequestMethod.PUT)
 	public ResponseEntity<InventoryItemResponse> updateInventory(@RequestBody InventoryItemRequest item)
 			throws ApiRuntimeException {
 		log.info("Update Inventory api called.");
