@@ -7,7 +7,7 @@ applications:
   routes:
     - route: inventory.apps.cnpsandbox.dryice01.in.hclcnlabs.com
   buildpacks:
-    - java_buildpack
+    - java_buildpack_offline
   services:
     - dbService
     - log-drain
