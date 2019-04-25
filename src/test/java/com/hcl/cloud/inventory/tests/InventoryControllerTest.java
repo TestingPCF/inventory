@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Optional;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,7 @@ public class InventoryControllerTest {
 	private InventoryService service;
 
 	@Test
-	@DisplayName("Get  /api/inventory/I001 - Found")
+	//@DisplayName("Get  /api/inventory/I001 - Found")
 	public void testGetInventoryByProductCodeFound() throws Exception {
 		InventoryItem mockItem = new InventoryItem("arqw42343", "I001", 12, true);
 		doReturn(Optional.of(mockItem)).when(service).getInventoryItem("I001");
@@ -59,7 +58,7 @@ public class InventoryControllerTest {
 	}
 
 	@Test
-	@DisplayName("Get /api/inventory/I002 - Not Found")
+	//@DisplayName("Get /api/inventory/I002 - Not Found")
 	public void testGetInventoryByProductCodeNotFound() throws Exception {
 
 		ApiRuntimeException exception = new ApiRuntimeException(404, 404, "Product does not Exists");
@@ -78,7 +77,7 @@ public class InventoryControllerTest {
 	
 	
 	@Test
-    @DisplayName("Post /api/inventory -- Create Inventory")
+    //@DisplayName("Post /api/inventory -- Create Inventory")
     public void testCreateInventory() throws Exception{
 
         InventoryItemRequest inventoryRequest = new InventoryItemRequest("I003",10);
@@ -101,7 +100,7 @@ public class InventoryControllerTest {
     }
 	
 	@Test
-    @DisplayName("Post /api/inventory -- Inventory Not Created")
+    //@DisplayName("Post /api/inventory -- Inventory Not Created")
     public void testInventoryAlreadyCreatedError() throws Exception{
 
 		InventoryItemRequest inventoryRequest = new InventoryItemRequest("I003",10);
@@ -123,7 +122,7 @@ public class InventoryControllerTest {
     }
 
     @Test
-    @DisplayName("Put /api/inventory -- Update Inventory")
+    //@DisplayName("Put /api/inventory -- Update Inventory")
     public void testUpateInventory() throws Exception{
 
         InventoryItemRequest inventoryRequest = new InventoryItemRequest("I003",12);
@@ -145,8 +144,99 @@ public class InventoryControllerTest {
 
 
     }
+    
+    
+    @Test
+    //@DisplayName("Put /api/inventory -- UpateInventoryProductNotFound ")
+    public void testUpateInventoryProductNotFound() throws Exception{
+
+        InventoryItemRequest inventoryRequest = new InventoryItemRequest("I003",12);
+        InventoryItem mockItem = new InventoryItem("product1231", "I002", 12, true);
+        
+        ApiRuntimeException exception = new ApiRuntimeException(404, 404, "Product does not Exists");
+
+        doReturn(Optional.of(mockItem)).when(service).getInventoryItem("I003");
+
+        doThrow(exception).when(service).updateInventory(any());
+
+        mockMvc.perform(put("")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(inventoryRequest)))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.code", is(404)))
+				.andExpect(jsonPath("$.message", is("Product does not Exists")));
+
+
+    }
+    
+    
+    @Test
+    //@DisplayName("Put /api/inventory -- UpateInventoryNegativeQuantityError ")
+    public void testUpateInventoryNegativeQuantityError() throws Exception{
+
+        InventoryItemRequest inventoryRequest = new InventoryItemRequest("I003", -1);
+        InventoryItem mockItem = new InventoryItem("product1231", "I003", 10, true);
+        
+        ApiRuntimeException exception = new ApiRuntimeException(400, 400, "Negative quantity");
+
+        doReturn(Optional.of(mockItem)).when(service).getInventoryItem("I003");
+
+        doThrow(exception).when(service).updateInventory(any());
+
+        mockMvc.perform(put("")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(inventoryRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.code", is(400)))
+				.andExpect(jsonPath("$.message", is("Negative quantity")));
+
+
+    }
+    
+    @Test
+    //@DisplayName("Put /api/inventory -- UpateInventoryInsufficientInventoryError ")
+    public void testUpateInventoryInsufficientInventoryError() throws Exception{
+
+        InventoryItemRequest inventoryRequest = new InventoryItemRequest("I003",12);
+        InventoryItem mockItem = new InventoryItem("product1231", "I003", 10, true);
+        
+        ApiRuntimeException exception = new ApiRuntimeException(400, 400, " Insufficient Inventory.");
+
+        doReturn(Optional.of(mockItem)).when(service).getInventoryItem("I003");
+
+        doThrow(exception).when(service).updateInventory(any());
+
+        mockMvc.perform(put("")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(inventoryRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.code", is(400)))
+				.andExpect(jsonPath("$.message", is(" Insufficient Inventory.")));
+
+
+    }
 
     
+    @Test
+    //@DisplayName("Post /api/inventory -- Create Inventory")
+    public void testisProductQuantityAvailable() throws Exception{
+
+       // InventoryItemRequest inventoryRequest = new InventoryItemRequest("I003",10);
+       // InventoryItem mockItem = new InventoryItem("product1231", "I003", 10, true);
+        
+        InventoryItem mockItem = new InventoryItem("arqw42343", "I001", 5, true);
+		doReturn(Optional.of(mockItem)).when(service).getInventoryItem("I001");
+
+
+		mockMvc.perform(get("/I001/10"))
+		.andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+		.andExpect(content().string("false"));
+
+    }
 
     static String asJsonString(final Object obj){
         try{

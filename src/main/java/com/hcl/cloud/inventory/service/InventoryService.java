@@ -13,7 +13,7 @@ import com.hcl.cloud.inventory.dto.InventoryItemRequest;
 @Component
 public interface InventoryService {
 	
-	public List<InventoryItem> findAllInventory();
+	//public List<InventoryItem> findAllInventory();
 
     public Optional<InventoryItem> getInventoryItem(final String productCode);
 

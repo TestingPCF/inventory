@@ -13,5 +13,5 @@ public interface InventoryRepository extends JpaRepository<InventoryItem, String
     
     Optional<InventoryItem> findBySkuCode(String skuCode);
     
-    List<InventoryItem> findAllByActiveStatus(Boolean activeStatus);
+    //List<InventoryItem> findAllByActiveStatus(Boolean activeStatus);
 }

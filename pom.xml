@@ -115,6 +115,18 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.2</version>
+				<configuration>
+					<excludes>
+						   
+						<exclude>com.hcl.cloud.inventory.config.*</exclude>
+						   
+						<exclude>com.hcl.cloud.inventory.exception.*</exclude>
+						   
+						<exclude>com.hcl.cloud.inventory.dto.*</exclude>
+						   
+						<exclude>com.hcl.cloud.inventory.repository.*</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>
@@ -135,6 +147,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+
 			</plugin>
 		</plugins>
 	</build>

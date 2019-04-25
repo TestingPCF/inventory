@@ -20,9 +20,10 @@ public class InventoryServiceImpl implements InventoryService {
 	@Autowired
 	private InventoryRepository repository;
 
-	public List<InventoryItem> findAllInventory() {
-		return repository.findAllByActiveStatus(true);
-	}
+	/*
+	 * public List<InventoryItem> findAllInventory() { return
+	 * repository.findAllByActiveStatus(true); }
+	 */
 
 	public Optional<InventoryItem> getInventoryItem(final String productCode) {
 
@@ -66,7 +67,7 @@ public class InventoryServiceImpl implements InventoryService {
 		long quantity=currentItem.getQuantity();
 		if(quantity<item.getQuantity()) {
 			log.error("Error {} Insufficient Inventory.", existingItem);
-			throw new ApiRuntimeException(404, 404, " Insufficient Inventory.");
+			throw new ApiRuntimeException(400, 400, " Insufficient Inventory.");
 		}
 		currentItem.setQuantity(quantity-item.getQuantity());
 		if(currentItem.getQuantity()==0l) {
