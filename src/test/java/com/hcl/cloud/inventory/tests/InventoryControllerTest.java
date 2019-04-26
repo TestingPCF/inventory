@@ -26,9 +26,47 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hcl.cloud.inventory.dto.InventoryItem;
 import com.hcl.cloud.inventory.dto.InventoryItemRequest;
+
+////import static org.hamcrest.CoreMatchers.any;
+//import static org.hamcrest.Matchers.is;
+////import static org.mockito.ArgumentMatchers.any;
+////import static org.mockito.Matchers.any;
+//import static org.mockito.Mockito.doReturn;
+//import static org.mockito.Mockito.doThrow;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+//
+//import java.util.Optional;
+//
+//import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.extension.ExtendWith;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+//import org.springframework.boot.test.context.SpringBootTest;
+//import org.springframework.boot.test.mock.mockito.MockBean;
+//import org.springframework.http.MediaType;
+//import org.springframework.test.context.junit.jupiter.SpringExtension;
+//import org.springframework.test.web.servlet.MockMvc;
+//
+//import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.hcl.cloud.inventory.dto.InventoryItem;
+//import com.hcl.cloud.inventory.dto.InventoryItemRequest;
+//import com.hcl.cloud.inventory.exception.ApiRuntimeException;
+//import com.hcl.cloud.inventory.service.InventoryService;
+//
+//import static org.hamcrest.Matchers.is;
+//import static org.mockito.ArgumentMatchers.isNotNull;
+//import static org.mockito.Mockito.*;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+
 import com.hcl.cloud.inventory.exception.ApiRuntimeException;
 import com.hcl.cloud.inventory.service.InventoryService;
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
