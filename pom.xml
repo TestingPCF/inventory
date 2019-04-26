@@ -100,49 +100,36 @@
 			<version>5.3.2</version>
 			<optional>true</optional>
 		</dependency>
-		<!-- <dependency> <groupId>org.powermock</groupId> <artifactId>powermock-module-junit4</artifactId> 
-			<version>1.6.4</version> <scope>test</scope> </dependency> <dependency> <groupId>org.powermock</groupId> 
-			<artifactId>powermock-api-mockito</artifactId> <version>1.6.4</version> <scope>test</scope> 
-			</dependency> <dependency> <groupId>org.mockito</groupId> <artifactId>mockito-core</artifactId> 
-			<version>1.10.19</version> </dependency> -->
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>1.6.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<version>1.6.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.10.19</version>
+		</dependency>
 
 	</dependencies>
 
 	<build>
 		<plugins>
 
-			<!-- <plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.2</version>
-				<configuration>
-					<excludes>
-						   
-						<exclude>com.hcl.cloud.inventory.config.*</exclude>
-						   
-						<exclude>com.hcl.cloud.inventory.exception.*</exclude>
-						   
-						<exclude>com.hcl.cloud.inventory.dto.*</exclude>
-						   
-						<exclude>com.hcl.cloud.inventory.repository.*</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					attached to Maven test phase
-					<execution>
-						<id>report</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin> -->
+			<!-- <plugin> <groupId>org.jacoco</groupId> <artifactId>jacoco-maven-plugin</artifactId> 
+				<version>0.8.2</version> <configuration> <excludes>     <exclude>com.hcl.cloud.inventory.config.*</exclude> 
+				    <exclude>com.hcl.cloud.inventory.exception.*</exclude>     <exclude>com.hcl.cloud.inventory.dto.*</exclude> 
+				    <exclude>com.hcl.cloud.inventory.repository.*</exclude> </excludes> </configuration> 
+				<executions> <execution> <goals> <goal>prepare-agent</goal> </goals> </execution> 
+				attached to Maven test phase <execution> <id>report</id> <phase>test</phase> 
+				<goals> <goal>report</goal> </goals> </execution> </executions> </plugin> -->
 
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
