@@ -11,10 +11,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.hcl.cloud.inventory.dto.InventoryItem;
 import com.hcl.cloud.inventory.dto.InventoryItemRequest;
@@ -23,7 +27,9 @@ import com.hcl.cloud.inventory.repository.InventoryRepository;
 import com.hcl.cloud.inventory.service.InventoryService;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
+@SpringBootTest(classes= {InventoryService.class,InventoryRepository.class})
+@DataJpaTest
+@RunWith(MockitoJUnitRunner.class)
 public class InventoryServiceTest {
 
 
