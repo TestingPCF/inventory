@@ -1,6 +1,5 @@
 package com.hcl.cloud.inventory.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;

@@ -18,6 +18,10 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<!-- <sonar.host.url> http://localhost:9000/ </sonar.host.url>
+		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+  <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+  <sonar.language>java</sonar.language> -->
 	</properties>
 
 	<dependencies>
@@ -46,6 +50,12 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.codehaus.sonar/sonar-maven-plugin -->
+		<!-- <dependency>
+			<groupId>org.codehaus.sonar</groupId>
+			<artifactId>sonar-maven-plugin</artifactId>
+			<version>5.1</version>
+		</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
@@ -119,18 +129,9 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.2</version>
-				<configuration>
-					<excludes>
-						   
-						<exclude>com.hcl.cloud.inventory.config.*</exclude>
-						   
-						<exclude>com.hcl.cloud.inventory.exception.*</exclude>
-						   
-						<exclude>com.hcl.cloud.inventory.dto.*</exclude>
-						   
-						<exclude>com.hcl.cloud.inventory.repository.*</exclude>
-					</excludes>
-				</configuration>
+				<!-- <configuration> <excludes>     <exclude>com.hcl.cloud.inventory.config.*</exclude> 
+					    <exclude>com.hcl.cloud.inventory.exception.*</exclude>     <exclude>com.hcl.cloud.inventory.dto.*</exclude> 
+					    <exclude>com.hcl.cloud.inventory.repository.*</exclude> </excludes> </configuration> -->
 				<executions>
 					<execution>
 						<goals>

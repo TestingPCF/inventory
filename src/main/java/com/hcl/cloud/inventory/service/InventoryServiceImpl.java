@@ -1,6 +1,5 @@
 package com.hcl.cloud.inventory.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,18 +36,18 @@ public class InventoryServiceImpl implements InventoryService {
 	}
 
 	public InventoryItem saveOrUpdateInventory(final InventoryItem item) {
-		final Optional<InventoryItem> existingItem = repository.findBySkuCode(item.getSkuCode());
+		final Optional<InventoryItem> existingItem = repository.findBySkuCodeAndActiveStatus(item.getSkuCode(), true);
 		if (existingItem.isPresent()) {
 			log.info("Item already present updating quantity");
-			InventoryItem currentItem=existingItem.get();
+			InventoryItem currentItem = existingItem.get();
 			currentItem.setQuantity(item.getQuantity());
-			if(currentItem.getQuantity()>0l)currentItem.setActiveStatus(true);
+			if (currentItem.getQuantity() > 0l)
+				currentItem.setActiveStatus(true);
 			return repository.save(currentItem);
-		}
-		else {
+		} else {
 			log.info("Adding item to inventory");
-		item.setActiveStatus(true);
-		return repository.save(item);
+			item.setActiveStatus(true);
+			return repository.save(item);
 		}
 	}
 
@@ -57,25 +56,17 @@ public class InventoryServiceImpl implements InventoryService {
 			log.error("Error {} Negative quantity {}", item.getSkuCode(), item.getQuantity());
 			throw new ApiRuntimeException(400, 400, "Negative quantity");
 		}
-		Optional<InventoryItem> existingItem=getInventoryItem(item.getSkuCode());
-		if (!existingItem.isPresent()) {
-			log.error("Error {} doesn't exist.", existingItem);
-			throw new ApiRuntimeException(404, 404, "Product does not Exists");
-		}
-		InventoryItem currentItem= existingItem.get();
-		
-		long quantity=currentItem.getQuantity();
-		if(quantity<item.getQuantity()) {
+		Optional<InventoryItem> existingItem = getInventoryItem(item.getSkuCode());
+
+		InventoryItem currentItem = existingItem.get();
+
+		long quantity = currentItem.getQuantity();
+		if (quantity < item.getQuantity()) {
 			log.error("Error {} Insufficient Inventory.", existingItem);
 			throw new ApiRuntimeException(400, 400, " Insufficient Inventory.");
 		}
-		currentItem.setQuantity(quantity-item.getQuantity());
-		if(currentItem.getQuantity()==0l) {
-			currentItem.setActiveStatus(false);
-		}
+		currentItem.setQuantity(quantity - item.getQuantity());		
 		return repository.save(currentItem);
 	}
-
-	
 
 }
