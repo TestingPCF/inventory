@@ -11,4 +11,5 @@ applications:
   services:
     - dbService
     - log-drain
-    - newrelic 
+    - newrelic
+    - rabbitmq-service 
