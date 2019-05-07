@@ -9,7 +9,7 @@ applications:
   buildpacks:
     - java_buildpack_offline
   services:
-    - dbService
+    - inventoryDB
     - log-drain
     - newrelic
-    - rabbitmq-service 
+    - rabbitmq-service
