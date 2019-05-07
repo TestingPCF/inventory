@@ -37,15 +37,6 @@ public class RabbitmqConfig {
 		return BindingBuilder.bind(appQueueSpecific()).to(mqExchange()).with(ROUTING_KEY);
 	}
 
-	
-//	@Bean
-//	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-//		RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-//		
-//		rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
-//		
-//		return rabbitTemplate;
-//	}
 	 @Bean
 	    public SimpleRabbitListenerContainerFactory jsaFactory(ConnectionFactory connectionFactory,
 	            SimpleRabbitListenerContainerFactoryConfigurer configurer) {
