@@ -10,6 +10,4 @@ applications:
     - java_buildpack_offline
   services:
     - inventoryDB
-    - log-drain
-    - newrelic
-    - rabbitmq-service
+    - worker-mq
