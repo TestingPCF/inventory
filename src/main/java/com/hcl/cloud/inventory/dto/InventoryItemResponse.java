@@ -16,26 +16,20 @@ import lombok.Setter;
 @AllArgsConstructor
 public class InventoryItemResponse {
 
-    private String skuCode;
-    private long quantity;
-    private boolean activeStatus;
-    private boolean inStock;
+	private String skuCode;
+	private long quantity;
+	private boolean activeStatus;
+	private boolean inStock;
 
-    public static InventoryItemResponse from(InventoryItem item) {
-        return InventoryItemResponse.builder()
-                .skuCode(item.getSkuCode())
-                .quantity(item.getQuantity())
-                .activeStatus(item.isActiveStatus())
-                .inStock(item.getQuantity() > 0 ? true : false)
-                .build();
-    }
+	public static InventoryItemResponse from(InventoryItem item) {
+		return InventoryItemResponse.builder().skuCode(item.getSkuCode()).quantity(item.getQuantity())
+				.activeStatus(item.isActiveStatus()).inStock(item.getQuantity() > 0 ? true : false).build();
+	}
 
-	
-	  public static List<InventoryItemResponse> from(List<InventoryItem> request) {
-	  final List<InventoryItemResponse> inventoryItemResponseList = new
-	  ArrayList<>(); request.parallelStream().forEach(item ->
-	  inventoryItemResponseList.add(from(item))); return inventoryItemResponseList;
-	  }
-	 
+	public static List<InventoryItemResponse> from(List<InventoryItem> request) {
+		final List<InventoryItemResponse> inventoryItemResponseList = new ArrayList<>();
+		request.parallelStream().forEach(item -> inventoryItemResponseList.add(from(item)));
+		return inventoryItemResponseList;
+	}
 
 }

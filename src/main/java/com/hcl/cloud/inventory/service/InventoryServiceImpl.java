@@ -1,5 +1,6 @@
 package com.hcl.cloud.inventory.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,6 @@ public class InventoryServiceImpl implements InventoryService {
 
 	@Autowired
 	private InventoryRepository repository;
-
-	/*
-	 * public List<InventoryItem> findAllInventory() { return
-	 * repository.findAllByActiveStatus(true); }
-	 */
 
 	public Optional<InventoryItem> getInventoryItem(final String productCode) {
 
@@ -65,8 +61,36 @@ public class InventoryServiceImpl implements InventoryService {
 			log.error("Error {} Insufficient Inventory.", existingItem);
 			throw new ApiRuntimeException(400, 400, " Insufficient Inventory.");
 		}
-		currentItem.setQuantity(quantity - item.getQuantity());		
+		currentItem.setQuantity(quantity - item.getQuantity());
 		return repository.save(currentItem);
 	}
 
+	/*
+	 * public InventoryItem deleteInventory(final String productCode) {
+	 * 
+	 * log.info("Delete Inventory api called.");
+	 * 
+	 * final Optional<InventoryItem> existingItem = getInventoryItem(productCode);
+	 * log.info("Item {} already exist.", existingItem.get());
+	 * 
+	 * if (!existingItem.isPresent()) { log.error("Error {} Item doesn't exist.",
+	 * existingItem.get()); throw new ApiRuntimeException(2222, 400,
+	 * "Product doesn't exists"); }
+	 * 
+	 * if (!existingItem.get().isActiveStatus()) {
+	 * log.error("Error {} already inactive", existingItem.get()); throw new
+	 * ApiRuntimeException(2224, 400, "Inactive product"); }
+	 * 
+	 * existingItem.get().setActiveStatus(false); return
+	 * repository.save(existingItem.get()); }
+	 */
+
+	public List<InventoryItem> findAllInventory() {
+		return repository.findAllByActiveStatus(true);
+	}
+
+	/*
+	 * public List<InventoryItem> findAllInventory() { return repository.findAll();
+	 * }
+	 */
 }

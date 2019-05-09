@@ -11,3 +11,5 @@ applications:
   services:
     - inventoryDB
     - worker-mq
+    - log-drain
+    - appdynamics

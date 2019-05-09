@@ -1,5 +1,6 @@
 package com.hcl.cloud.inventory.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -21,7 +22,6 @@ import com.hcl.cloud.inventory.dto.InventoryItemResponse;
 import com.hcl.cloud.inventory.exception.ApiRuntimeException;
 import com.hcl.cloud.inventory.service.InventoryService;
 
-
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -29,11 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 //@RequestMapping(value = "/")
 public class InventoryController {
 
-	
-	
 	@Autowired
 	private InventoryService invetoryService;
-	
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<InventoryItemResponse> createInventory(@RequestBody InventoryItemRequest item)
@@ -58,34 +55,58 @@ public class InventoryController {
 		final Optional<InventoryItem> existingItem = invetoryService.getInventoryItem(productCode);
 		InventoryItem inventry = existingItem.get();
 		Long quanityLong = new Long(quantity);
-		if(inventry.isActiveStatus() && quanityLong.longValue()<= inventry.getQuantity() ) {
+		if (inventry.isActiveStatus() && quanityLong.longValue() <= inventry.getQuantity()) {
 			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 		}
 		return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.PUT)
 	public ResponseEntity<InventoryItemResponse> updateInventory(@RequestBody InventoryItemRequest item)
 			throws ApiRuntimeException {
 		log.info("Update Inventory api called.");
 
-//		final Optional<InventoryItem> existingItem = invetoryService.getInventoryItem(item.getSkuCode());
-//		log.info("Item {} already exist.", item.getSkuCode());
-
-		//existingItem.get().setQuantity(item.getQuantity());
 		return new ResponseEntity<InventoryItemResponse>(
 				InventoryItemResponse.from(invetoryService.updateInventory(item)), HttpStatus.ACCEPTED);
 
 	}
+
 	@Autowired
-    Jackson2JsonMessageConverter jackson2JsonMessageConverter;
-    @RabbitListener(queues = RabbitmqConfig.QUEUE_SPECIFIC_NAME)
-    public void receiveMessage(CustomMessageBean customMessage) {
-        //CustomMessageBean customMessageBean=(CustomMessageBean) jackson2JsonMessageConverter.fromMessage(customMessage);
-        System.out.println("Received message from Listener from Controller {} "+ customMessage.toString());
-        InventoryItemRequest req=new InventoryItemRequest();
-        req.setQuantity(customMessage.getQuantity());
-        req.setSkuCode(customMessage.getSkuCode());
-        createInventory(req);
-    }
+	Jackson2JsonMessageConverter jackson2JsonMessageConverter;
+
+	@RabbitListener(queues = RabbitmqConfig.QUEUE_SPECIFIC_NAME)
+	public void receiveMessage(CustomMessageBean customMessage) {
+		// CustomMessageBean customMessageBean=(CustomMessageBean)
+		// jackson2JsonMessageConverter.fromMessage(customMessage);
+		System.out.println("Received message from Listener from Controller {} " + customMessage.toString());
+		InventoryItemRequest req = new InventoryItemRequest();
+		req.setQuantity(customMessage.getQuantity());
+		req.setSkuCode(customMessage.getSkuCode());
+		createInventory(req);
+	}
+
+	/*
+	 * @RequestMapping(value = "/{productCode}", method = RequestMethod.DELETE)
+	 * public ResponseEntity<InventoryItemResponse>
+	 * deleteInventory(@PathVariable("productCode") String productCode) throws
+	 * ApiRuntimeException { log.info("Delete Inventory api called.");
+	 * 
+	 * //final Optional<InventoryItem> existingItem =
+	 * invetoryService.getInventoryItem(productCode);
+	 * 
+	 * 
+	 * return new ResponseEntity<InventoryItemResponse>(
+	 * InventoryItemResponse.from(invetoryService.deleteInventory(productCode)),
+	 * HttpStatus.OK);
+	 * 
+	 * }
+	 */
+
+	@RequestMapping(method = RequestMethod.GET)
+	public ResponseEntity<List<InventoryItemResponse>> getAllInventory() {
+		log.info("Get all Inventory item api called");
+		final List<InventoryItem> existingItems = invetoryService.findAllInventory();
+		return new ResponseEntity<List<InventoryItemResponse>>(InventoryItemResponse.from(existingItems),
+				HttpStatus.OK);
+	}
 }

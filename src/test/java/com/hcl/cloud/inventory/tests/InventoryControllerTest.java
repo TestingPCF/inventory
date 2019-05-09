@@ -191,6 +191,19 @@ public class InventoryControllerTest {
 				.andExpect(content().string("true"));
 
 	}
+	
+	@Test
+	@DisplayName("Delete /I001 - Delete Inventory")
+	public void testDeleteInventory() throws Exception {
+		InventoryItem mockItem = new InventoryItem("arqw42343", "I001", 12, true);
+		doReturn(Optional.of(mockItem)).when(service).getInventoryItem("I001");
+
+		mockMvc.perform(get("/{productCode}", "I001")).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andExpect(jsonPath("$.skuCode", is("I001"))).andExpect(jsonPath("$.quantity", is(12)))
+				.andExpect(jsonPath("$.activeStatus", is(true))).andExpect(jsonPath("$.inStock", is(true)));
+
+	}
 
 	static String asJsonString(final Object obj) {
 		try {

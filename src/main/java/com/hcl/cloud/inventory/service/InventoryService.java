@@ -1,5 +1,6 @@
 package com.hcl.cloud.inventory.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
@@ -12,12 +13,16 @@ import com.hcl.cloud.inventory.dto.InventoryItemRequest;
 @Component
 public interface InventoryService {
 	
-	//public List<InventoryItem> findAllInventory();
+	public List<InventoryItem> findAllInventory();
 
     public Optional<InventoryItem> getInventoryItem(final String productCode);
 
     public InventoryItem saveOrUpdateInventory(final InventoryItem item);
     
     public InventoryItem updateInventory(final InventoryItemRequest item);
+    
+    //public InventoryItem deleteInventory(final String productCode);
+    
+    
 
 }

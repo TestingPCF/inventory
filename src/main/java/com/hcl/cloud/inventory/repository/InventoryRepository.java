@@ -1,5 +1,6 @@
 package com.hcl.cloud.inventory.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,5 +13,5 @@ public interface InventoryRepository extends JpaRepository<InventoryItem, String
     
     //Optional<InventoryItem> findBySkuCode(String skuCode);
     
-    //List<InventoryItem> findAllByActiveStatus(Boolean activeStatus);
+    List<InventoryItem> findAllByActiveStatus(Boolean activeStatus);
 }
