@@ -13,3 +13,4 @@ applications:
     - worker-mq
     - log-drain
     - appdynamics
+    - cloud-config-server
