@@ -25,7 +25,7 @@ public class InventoryServiceImpl implements InventoryService {
 		final Optional<InventoryItem> existingItem = repository.findBySkuCodeAndActiveStatus(productCode, true);
 		if (!existingItem.isPresent()) {
 			log.error("Error {} Product does not exist.", existingItem);
-			throw new ApiRuntimeException(404, 404, "Product does not Exists");
+			throw new ApiRuntimeException(201, 201, "Product does not Exists");
 		}
 
 		return existingItem;
