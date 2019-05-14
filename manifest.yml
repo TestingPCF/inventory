@@ -4,13 +4,9 @@ applications:
   path: target/inventory-0.0.1-SNAPSHOT.jar
   memory: 750M
   instances: 1
-  routes:
-    - route: inventory.apps.sandbox.cflab01.in.hclcnlabs.com
-  buildpacks:
-    - java_buildpack_offline
-  services:
-    - inventoryDB
-    - worker-mq
-    - log-drain
-    - appdynamics
-    - cloud-config-server
+  services:  - inventoryDB
+  - worker-mq
+  - log-drain
+  - appdynamics
+  - cloud-config-server
+  routes:  - route: inventory.apps.sandbox.cflab01.in.hclcnlabs.com
