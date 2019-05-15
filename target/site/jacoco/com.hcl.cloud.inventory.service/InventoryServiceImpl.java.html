@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InventoryServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inventory</a> &gt; <a href="index.source.html" class="el_package">com.hcl.cloud.inventory.service</a> &gt; <span class="el_source">InventoryServiceImpl.java</span></div><h1>InventoryServiceImpl.java</h1><pre class="source lang-java linenums">package com.hcl.cloud.inventory.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hcl.cloud.inventory.dto.InventoryItem;
+import com.hcl.cloud.inventory.dto.InventoryItemRequest;
+import com.hcl.cloud.inventory.exception.ApiRuntimeException;
+import com.hcl.cloud.inventory.repository.InventoryRepository;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+<span class="fc" id="L17">@Slf4j</span>
+<span class="fc" id="L18">public class InventoryServiceImpl implements InventoryService {</span>
+
+	@Autowired
+	private InventoryRepository repository;
+
+	public Optional&lt;InventoryItem&gt; getInventoryItem(final String productCode) {
+
+<span class="fc" id="L25">		final Optional&lt;InventoryItem&gt; existingItem = repository.findBySkuCodeAndActiveStatus(productCode, true);</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">		if (!existingItem.isPresent()) {</span>
+<span class="fc" id="L27">			log.error(&quot;Error {} Product does not exist.&quot;, existingItem);</span>
+<span class="fc" id="L28">			throw new ApiRuntimeException(404, 404, &quot;Product does not Exists&quot;);</span>
+		}
+
+<span class="fc" id="L31">		return existingItem;</span>
+	}
+
+	public InventoryItem saveOrUpdateInventory(final InventoryItem item) {
+<span class="fc" id="L35">		final Optional&lt;InventoryItem&gt; existingItem = repository.findBySkuCodeAndActiveStatus(item.getSkuCode(), true);</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">		if (existingItem.isPresent()) {</span>
+<span class="fc" id="L37">			log.info(&quot;Item already present updating quantity&quot;);</span>
+<span class="fc" id="L38">			InventoryItem currentItem = existingItem.get();</span>
+<span class="fc" id="L39">			currentItem.setQuantity(item.getQuantity());</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">			if (currentItem.getQuantity() &gt; 0l)</span>
+<span class="fc" id="L41">				currentItem.setActiveStatus(true);</span>
+<span class="fc" id="L42">			return repository.save(currentItem);</span>
+		} else {
+<span class="fc" id="L44">			log.info(&quot;Adding item to inventory&quot;);</span>
+<span class="fc" id="L45">			item.setActiveStatus(true);</span>
+<span class="fc" id="L46">			return repository.save(item);</span>
+		}
+	}
+
+	public InventoryItem updateInventory(final InventoryItemRequest item) {
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">		if (item.getQuantity() &lt; 0) {</span>
+<span class="fc" id="L52">			log.error(&quot;Error {} Negative quantity {}&quot;, item.getSkuCode(), item.getQuantity());</span>
+<span class="fc" id="L53">			throw new ApiRuntimeException(400, 400, &quot;Negative quantity&quot;);</span>
+		}
+<span class="nc" id="L55">		Optional&lt;InventoryItem&gt; existingItem = getInventoryItem(item.getSkuCode());</span>
+
+<span class="nc bnc" id="L57" title="All 2 branches missed.">		if (existingItem.isPresent()) {</span>
+<span class="nc" id="L58">			InventoryItem currentItem = existingItem.get();</span>
+
+<span class="nc" id="L60">			long quantity = currentItem.getQuantity();</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">			if (quantity &lt; item.getQuantity()) {</span>
+<span class="nc" id="L62">				log.error(&quot;Error {} Insufficient Inventory.&quot;, existingItem);</span>
+<span class="nc" id="L63">				throw new ApiRuntimeException(400, 400, &quot; Insufficient Inventory.&quot;);</span>
+			}
+<span class="nc" id="L65">			currentItem.setQuantity(quantity - item.getQuantity());</span>
+<span class="nc" id="L66">			return repository.save(currentItem);</span>
+		} else {
+<span class="nc" id="L68">			return null;</span>
+		}
+
+	}
+
+	/*
+	 * public InventoryItem deleteInventory(final String productCode) {
+	 * 
+	 * log.info(&quot;Delete Inventory api called.&quot;);
+	 * 
+	 * final Optional&lt;InventoryItem&gt; existingItem = getInventoryItem(productCode);
+	 * log.info(&quot;Item {} already exist.&quot;, existingItem.get());
+	 * 
+	 * if (!existingItem.isPresent()) { log.error(&quot;Error {} Item doesn't exist.&quot;,
+	 * existingItem.get()); throw new ApiRuntimeException(2222, 400,
+	 * &quot;Product doesn't exists&quot;); }
+	 * 
+	 * if (!existingItem.get().isActiveStatus()) {
+	 * log.error(&quot;Error {} already inactive&quot;, existingItem.get()); throw new
+	 * ApiRuntimeException(2224, 400, &quot;Inactive product&quot;); }
+	 * 
+	 * existingItem.get().setActiveStatus(false); return
+	 * repository.save(existingItem.get()); }
+	 */
+
+	public List&lt;InventoryItem&gt; findAllInventory() {
+<span class="nc" id="L94">		return repository.findAllByActiveStatus(true);</span>
+	}
+
+	/*
+	 * public List&lt;InventoryItem&gt; findAllInventory() { return repository.findAll();
+	 * }
+	 */
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

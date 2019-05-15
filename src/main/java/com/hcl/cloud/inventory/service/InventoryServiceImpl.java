@@ -54,15 +54,20 @@ public class InventoryServiceImpl implements InventoryService {
 		}
 		Optional<InventoryItem> existingItem = getInventoryItem(item.getSkuCode());
 
-		InventoryItem currentItem = existingItem.get();
+		if (existingItem.isPresent()) {
+			InventoryItem currentItem = existingItem.get();
 
-		long quantity = currentItem.getQuantity();
-		if (quantity < item.getQuantity()) {
-			log.error("Error {} Insufficient Inventory.", existingItem);
-			throw new ApiRuntimeException(400, 400, " Insufficient Inventory.");
+			long quantity = currentItem.getQuantity();
+			if (quantity < item.getQuantity()) {
+				log.error("Error {} Insufficient Inventory.", existingItem);
+				throw new ApiRuntimeException(400, 400, " Insufficient Inventory.");
+			}
+			currentItem.setQuantity(quantity - item.getQuantity());
+			return repository.save(currentItem);
+		} else {
+			return null;
 		}
-		currentItem.setQuantity(quantity - item.getQuantity());
-		return repository.save(currentItem);
+
 	}
 
 	/*

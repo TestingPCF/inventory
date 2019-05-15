@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InventoryController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inventory</a> &gt; <a href="index.source.html" class="el_package">com.hcl.cloud.inventory.controller</a> &gt; <span class="el_source">InventoryController.java</span></div><h1>InventoryController.java</h1><pre class="source lang-java linenums">package com.hcl.cloud.inventory.controller;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.hcl.cloud.inventory.config.RabbitmqConfig;
+import com.hcl.cloud.inventory.dto.CustomMessageBean;
+import com.hcl.cloud.inventory.dto.InventoryItem;
+import com.hcl.cloud.inventory.dto.InventoryItemRequest;
+import com.hcl.cloud.inventory.dto.InventoryItemResponse;
+import com.hcl.cloud.inventory.exception.ApiRuntimeException;
+import com.hcl.cloud.inventory.service.InventoryService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@RestController
+<span class="fc" id="L28">@Slf4j</span>
+//@RequestMapping(value = &quot;/&quot;)
+<span class="fc" id="L30">public class InventoryController {</span>
+
+	@Autowired
+	private InventoryService invetoryService;
+
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity&lt;InventoryItemResponse&gt; createInventory(@RequestBody InventoryItemRequest item)
+			throws ApiRuntimeException {
+<span class="fc" id="L38">		return new ResponseEntity&lt;InventoryItemResponse&gt;(</span>
+<span class="fc" id="L39">				InventoryItemResponse.from(invetoryService.saveOrUpdateInventory(InventoryItemRequest.from(item))),</span>
+				HttpStatus.CREATED);
+
+	}
+
+	@RequestMapping(value = &quot;/{productCode}&quot;, method = RequestMethod.GET)
+	public ResponseEntity&lt;InventoryItemResponse&gt; getInventoryItem(@PathVariable(&quot;productCode&quot;) String productCode) {
+<span class="fc" id="L46">		log.info(&quot;Get Inventory api called..{}&quot;, productCode);</span>
+<span class="fc" id="L47">		final Optional&lt;InventoryItem&gt; existingItem = invetoryService.getInventoryItem(productCode);</span>
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">		return new ResponseEntity&lt;InventoryItemResponse&gt;(InventoryItemResponse.from(existingItem.isPresent()? existingItem.get():null), HttpStatus.OK);</span>
+		
+		
+	}
+
+	@RequestMapping(value = &quot;/{productCode}/{quantity}&quot;, method = RequestMethod.GET)
+	public ResponseEntity&lt;Boolean&gt; isProductQuantityAvailable(@PathVariable(&quot;productCode&quot;) String productCode,
+			@PathVariable(&quot;quantity&quot;) String quantity) {
+<span class="fc" id="L56">		log.info(&quot;Get Inventory api called..{}&quot;, productCode);</span>
+<span class="fc" id="L57">		final Optional&lt;InventoryItem&gt; existingItem = invetoryService.getInventoryItem(productCode);</span>
+		
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">		if(existingItem.isPresent())</span>
+		{
+<span class="fc" id="L61">			InventoryItem inventry = existingItem.get();</span>
+<span class="pc bpc" id="L62" title="2 of 4 branches missed.">			if (inventry.isActiveStatus() &amp;&amp; Long.valueOf(quantity) &lt;= inventry.getQuantity()) {</span>
+<span class="fc" id="L63">				return new ResponseEntity&lt;Boolean&gt;(true, HttpStatus.OK);</span>
+			}
+		}
+<span class="nc" id="L66">		return new ResponseEntity&lt;Boolean&gt;(false, HttpStatus.OK);</span>
+	}
+
+	@RequestMapping(method = RequestMethod.PUT)
+	public ResponseEntity&lt;InventoryItemResponse&gt; updateInventory(@RequestBody InventoryItemRequest item)
+			throws ApiRuntimeException {
+<span class="fc" id="L72">		log.info(&quot;Update Inventory api called.&quot;);</span>
+
+<span class="fc" id="L74">		return new ResponseEntity&lt;InventoryItemResponse&gt;(</span>
+<span class="fc" id="L75">				InventoryItemResponse.from(invetoryService.updateInventory(item)), HttpStatus.ACCEPTED);</span>
+
+	}
+
+	@Autowired
+	Jackson2JsonMessageConverter jackson2JsonMessageConverter;
+
+	@RabbitListener(queues = RabbitmqConfig.QUEUE_SPECIFIC_NAME)
+	public void receiveMessage(CustomMessageBean customMessage) {
+		// CustomMessageBean customMessageBean=(CustomMessageBean)
+		// jackson2JsonMessageConverter.fromMessage(customMessage);
+<span class="nc" id="L86">		System.out.println(&quot;Received message from Listener from Controller {} &quot; + customMessage.toString());</span>
+<span class="nc" id="L87">		InventoryItemRequest req = new InventoryItemRequest();</span>
+<span class="nc" id="L88">		req.setQuantity(customMessage.getQuantity());</span>
+<span class="nc" id="L89">		req.setSkuCode(customMessage.getSkuCode());</span>
+<span class="nc" id="L90">		createInventory(req);</span>
+<span class="nc" id="L91">	}</span>
+
+	/*
+	 * @RequestMapping(value = &quot;/{productCode}&quot;, method = RequestMethod.DELETE)
+	 * public ResponseEntity&lt;InventoryItemResponse&gt;
+	 * deleteInventory(@PathVariable(&quot;productCode&quot;) String productCode) throws
+	 * ApiRuntimeException { log.info(&quot;Delete Inventory api called.&quot;);
+	 * 
+	 * //final Optional&lt;InventoryItem&gt; existingItem =
+	 * invetoryService.getInventoryItem(productCode);
+	 * 
+	 * 
+	 * return new ResponseEntity&lt;InventoryItemResponse&gt;(
+	 * InventoryItemResponse.from(invetoryService.deleteInventory(productCode)),
+	 * HttpStatus.OK);
+	 * 
+	 * }
+	 */
+
+	@RequestMapping(method = RequestMethod.GET)
+	public ResponseEntity&lt;List&lt;InventoryItemResponse&gt;&gt; getAllInventory() {
+<span class="nc" id="L112">		log.info(&quot;Get all Inventory item api called&quot;);</span>
+<span class="nc" id="L113">		final List&lt;InventoryItem&gt; existingItems = invetoryService.findAllInventory();</span>
+<span class="nc" id="L114">		return new ResponseEntity&lt;List&lt;InventoryItemResponse&gt;&gt;(InventoryItemResponse.from(existingItems),</span>
+				HttpStatus.OK);
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

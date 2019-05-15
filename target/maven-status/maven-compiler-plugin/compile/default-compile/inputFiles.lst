@@ -1,0 +1,14 @@
+C:\Inventory\src\main\java\com\hcl\cloud\inventory\config\SwaggerConfiguration.java
+C:\Inventory\src\main\java\com\hcl\cloud\inventory\dto\CustomMessageBean.java
+C:\Inventory\src\main\java\com\hcl\cloud\inventory\service\InventoryServiceImpl.java
+C:\Inventory\src\main\java\com\hcl\cloud\inventory\dto\InventoryItemRequest.java
+C:\Inventory\src\main\java\com\hcl\cloud\inventory\repository\InventoryRepository.java
+C:\Inventory\src\main\java\com\hcl\cloud\inventory\dto\InventoryItemResponse.java
+C:\Inventory\src\main\java\com\hcl\cloud\inventory\dto\InventoryItem.java
+C:\Inventory\src\main\java\com\hcl\cloud\inventory\config\RabbitmqConfig.java
+C:\Inventory\src\main\java\com\hcl\cloud\inventory\ServletInitializer.java
+C:\Inventory\src\main\java\com\hcl\cloud\inventory\controller\InventoryController.java
+C:\Inventory\src\main\java\com\hcl\cloud\inventory\service\InventoryService.java
+C:\Inventory\src\main\java\com\hcl\cloud\inventory\exception\ApiRuntimeException.java
+C:\Inventory\src\main\java\com\hcl\cloud\inventory\exception\GlobalErrorHandler.java
+C:\Inventory\src\main\java\com\hcl\cloud\inventory\ManageinventoryserviceApplication.java
