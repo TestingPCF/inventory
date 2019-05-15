@@ -10,10 +10,12 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConversionException;
 import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@RefreshScope
 public class RabbitmqConfig {
 	public static final String EXCHANGE_NAME = "pocMqTest";
 	
@@ -21,7 +23,13 @@ public class RabbitmqConfig {
 	
 	public static final String QUEUE_SPECIFIC_NAME = "appSpecificQueue";
 
+/*
+	public String EXCHANGE_NAME = "";
 	
+	public String ROUTING_KEY = "";
+	
+	public String QUEUE_SPECIFIC_NAME = "";*/
+
 	@Bean
 	public TopicExchange mqExchange() {
 		return new TopicExchange(EXCHANGE_NAME);
