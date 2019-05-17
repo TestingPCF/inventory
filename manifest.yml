@@ -5,7 +5,7 @@ applications:
   memory: 750M
   instances: 1
   services:  - inventoryDB
-  - worker-mq
+  - testrabbitmq
   - log-drain
   - appdynamics
   - cloud-config-server
