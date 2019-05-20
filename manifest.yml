@@ -6,6 +6,7 @@ applications:
   instances: 1
   services:  - inventoryDB
   - worker-mq
+  - cloud-service-registry
   - log-drain
   - appdynamics
   - cloud-config-server
