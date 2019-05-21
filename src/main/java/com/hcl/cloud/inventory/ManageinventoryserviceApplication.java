@@ -12,6 +12,7 @@ import com.hcl.cloud.inventory.config.SwaggerConfiguration;
 @Import({ SwaggerConfiguration.class, RabbitmqConfig.class })
 @EnableDiscoveryClient
 public class ManageinventoryserviceApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(ManageinventoryserviceApplication.class, args);
     }

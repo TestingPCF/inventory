@@ -10,4 +10,4 @@ applications:
   - log-drain
   - appdynamics
   - cloud-config-server
-  routes:  - route: inventory.apps.sandbox.cflab01.in.hclcnlabs.com
+  routes:   - route: inventory.apps.sandbox.cflab01.in.hclcnlabs.com
