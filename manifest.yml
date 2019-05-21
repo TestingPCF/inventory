@@ -2,7 +2,7 @@
 applications:
 - name: inventory
   path: target/inventory-0.0.1-SNAPSHOT.jar
-  memory: 750M
+  memory: 1G
   instances: 1
   services:  - inventoryDB
   - worker-mq
