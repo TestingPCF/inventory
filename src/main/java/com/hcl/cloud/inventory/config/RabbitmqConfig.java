@@ -23,12 +23,6 @@ public class RabbitmqConfig {
 	
 	public static final String QUEUE_SPECIFIC_NAME = "appSpecificQueue";
 
-/*
-	public String EXCHANGE_NAME = "";
-	
-	public String ROUTING_KEY = "";
-	
-	public String QUEUE_SPECIFIC_NAME = "";*/
 
 	@Bean
 	public TopicExchange mqExchange() {

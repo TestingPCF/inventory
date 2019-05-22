@@ -21,7 +21,6 @@ public interface InventoryService {
     
     public InventoryItem updateInventory(final InventoryItemRequest item);
     
-    //public InventoryItem deleteInventory(final String productCode);
     
     
 

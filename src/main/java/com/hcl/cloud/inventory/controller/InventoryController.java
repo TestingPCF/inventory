@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-//@RequestMapping(value = "/")
 public class InventoryController {
 
 	@Autowired
@@ -90,22 +89,6 @@ public class InventoryController {
 		createInventory(req);
 	}
 
-	/*
-	 * @RequestMapping(value = "/{productCode}", method = RequestMethod.DELETE)
-	 * public ResponseEntity<InventoryItemResponse>
-	 * deleteInventory(@PathVariable("productCode") String productCode) throws
-	 * ApiRuntimeException { log.info("Delete Inventory api called.");
-	 * 
-	 * //final Optional<InventoryItem> existingItem =
-	 * invetoryService.getInventoryItem(productCode);
-	 * 
-	 * 
-	 * return new ResponseEntity<InventoryItemResponse>(
-	 * InventoryItemResponse.from(invetoryService.deleteInventory(productCode)),
-	 * HttpStatus.OK);
-	 * 
-	 * }
-	 */
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<InventoryItemResponse>> getAllInventory() {
