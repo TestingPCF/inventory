@@ -1,0 +1,4 @@
+properties:
+  router:
+    tracing:
+      enable_zipkin: true
