@@ -44,7 +44,7 @@ public class InventoryController {
 
 	@RequestMapping(value = "/{productCode}", method = RequestMethod.GET)
 	public ResponseEntity<InventoryItemResponse> getInventoryItem(@PathVariable("productCode") String productCode) {
-		log.info("Get Inventory api called..{}", productCode);
+		log.debug("Get Inventory api called..{}", productCode);
 		final Optional<InventoryItem> existingItem = invetoryService.getInventoryItem(productCode);
 		return new ResponseEntity<InventoryItemResponse>(InventoryItemResponse.from(existingItem.isPresent()? existingItem.get():null), HttpStatus.OK);
 		
@@ -54,7 +54,7 @@ public class InventoryController {
 	@RequestMapping(value = "/{productCode}/{quantity}", method = RequestMethod.GET)
 	public ResponseEntity<Boolean> isProductQuantityAvailable(@PathVariable("productCode") String productCode,
 			@PathVariable("quantity") String quantity) {
-		log.info("Get Inventory api called..{}", productCode);
+		log.debug("Get Inventory api called..{}", productCode);
 		final Optional<InventoryItem> existingItem = invetoryService.getInventoryItem(productCode);
 		
 		if(existingItem.isPresent())
