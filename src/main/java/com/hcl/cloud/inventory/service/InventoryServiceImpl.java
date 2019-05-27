@@ -27,7 +27,7 @@ public class InventoryServiceImpl implements InventoryService {
 
 	public Optional<InventoryItem> getInventoryItem(final String productCode) {
 
-		try {
+		//try {
 			final Optional<InventoryItem> existingItem = repository.findBySkuCodeAndActiveStatus(productCode, true);
 			if (!existingItem.isPresent()) {
 				log.error("Error {} Product does not exist.", existingItem);
@@ -35,10 +35,10 @@ public class InventoryServiceImpl implements InventoryService {
 			}
 			log.info("Getting inventory item by skuCode");
 			return existingItem;
-		} catch (Exception ext) {
-			log.error("Seems database service unavaible.");
-			throw new ApiRuntimeException(500, 500, "Data base service down.");
-		}
+		/*
+		 * } catch (Exception ext) { log.error("Seems database service unavaible.");
+		 * throw new ApiRuntimeException(500, 500, "Data base service down."); }
+		 */
 	}
 
 	public InventoryItem saveOrUpdateInventory(final InventoryItem item) {
