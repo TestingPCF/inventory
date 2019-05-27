@@ -27,7 +27,7 @@ public class InventoryServiceImpl implements InventoryService {
 
 	public Optional<InventoryItem> getInventoryItem(final String productCode) {
 
-		//try {
+		//try { 
 			final Optional<InventoryItem> existingItem = repository.findBySkuCodeAndActiveStatus(productCode, true);
 			if (!existingItem.isPresent()) {
 				log.error("Error {} Product does not exist.", existingItem);
