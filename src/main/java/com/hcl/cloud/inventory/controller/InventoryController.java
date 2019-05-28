@@ -3,6 +3,7 @@ package com.hcl.cloud.inventory.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +24,19 @@ import com.hcl.cloud.inventory.dto.InventoryItemResponse;
 import com.hcl.cloud.inventory.exception.ApiRuntimeException;
 import com.hcl.cloud.inventory.service.InventoryService;
 
-import lombok.extern.slf4j.Slf4j;
+//import lombok.extern.slf4j.Slf4j;
+
+
 
 @RestController
 @RefreshScope
-@Slf4j
+//@Slf4j
 public class InventoryController {
 
 	@Autowired
 	private InventoryService invetoryService;
+	
+	 private static final org.slf4j.Logger logger = LoggerFactory.getLogger(InventoryController.class);
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<InventoryItemResponse> createInventory(@RequestBody InventoryItemRequest item)
@@ -44,7 +49,7 @@ public class InventoryController {
 
 	@RequestMapping(value = "/{productCode}", method = RequestMethod.GET)
 	public ResponseEntity<InventoryItemResponse> getInventoryItem(@PathVariable("productCode") String productCode) {
-		log.debug("Get Inventory api called..{}", productCode);
+		logger.debug("Get Inventory api called..{}", productCode);
 		final Optional<InventoryItem> existingItem = invetoryService.getInventoryItem(productCode);
 		return new ResponseEntity<InventoryItemResponse>(InventoryItemResponse.from(existingItem.isPresent()? existingItem.get():null), HttpStatus.OK);
 		
@@ -54,7 +59,7 @@ public class InventoryController {
 	@RequestMapping(value = "/{productCode}/{quantity}", method = RequestMethod.GET)
 	public ResponseEntity<Boolean> isProductQuantityAvailable(@PathVariable("productCode") String productCode,
 			@PathVariable("quantity") String quantity) {
-		log.debug("Get Inventory api called..{}", productCode);
+		logger.debug("Get Inventory api called..{}", productCode);
 		final Optional<InventoryItem> existingItem = invetoryService.getInventoryItem(productCode);
 		
 		if(existingItem.isPresent())
@@ -70,7 +75,7 @@ public class InventoryController {
 	@RequestMapping(method = RequestMethod.PUT)
 	public ResponseEntity<InventoryItemResponse> updateInventory(@RequestBody InventoryItemRequest item)
 			throws ApiRuntimeException {
-		log.info("Update Inventory api called.");
+		logger.info("Update Inventory api called.");
 
 		return new ResponseEntity<InventoryItemResponse>(
 				InventoryItemResponse.from(invetoryService.updateInventory(item)), HttpStatus.ACCEPTED);
@@ -94,7 +99,7 @@ public class InventoryController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<InventoryItemResponse>> getAllInventory() {
-		log.info("Get all Inventory item api called");
+		logger.info("Get all Inventory item api called");
 		final List<InventoryItem> existingItems = invetoryService.findAllInventory();
 		return new ResponseEntity<List<InventoryItemResponse>>(InventoryItemResponse.from(existingItems),
 				HttpStatus.OK);

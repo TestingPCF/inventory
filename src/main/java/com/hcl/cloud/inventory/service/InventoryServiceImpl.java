@@ -4,25 +4,29 @@ package com.hcl.cloud.inventory.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 
+import com.hcl.cloud.inventory.controller.InventoryController;
 import com.hcl.cloud.inventory.dto.InventoryItem;
 import com.hcl.cloud.inventory.dto.InventoryItemRequest;
 import com.hcl.cloud.inventory.exception.ApiRuntimeException;
 import com.hcl.cloud.inventory.repository.InventoryRepository;
 
-import lombok.extern.slf4j.Slf4j;
+//import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
+//@Slf4j
 @RefreshScope
 public class InventoryServiceImpl implements InventoryService {
 
 	@Autowired
 	private InventoryRepository repository;
+	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(InventoryServiceImpl.class);
 
 	@Value("${inventory.product.unavailable.msg}")
 	private String PRODUCT_UNAVAILABLE;
@@ -42,14 +46,14 @@ public class InventoryServiceImpl implements InventoryService {
 		try {
 			existingItem = repository.findBySkuCodeAndActiveStatus(productCode, true);
 		} catch (Exception ext) {
-			log.error("Seems Inventory database service unavaible.");
+			logger.error("Seems Inventory database service unavaible.");
 			throw new ApiRuntimeException(500, 500, "Inventory Data base service down.");
 		}
 		if (!existingItem.isPresent()) {
-			log.error("Error {} Product does not exist.", existingItem);
+			logger.error("Error {} Product does not exist.", existingItem);
 			throw new ApiRuntimeException(404, 404, PRODUCT_UNAVAILABLE);
 		}
-		log.info("Getting inventory item by skuCode");
+		logger.info("Getting inventory item by skuCode");
 		return existingItem;
 
 	}
@@ -60,11 +64,11 @@ public class InventoryServiceImpl implements InventoryService {
 		try {
 			existingItem = repository.findBySkuCodeAndActiveStatus(item.getSkuCode(), true);
 		} catch (Exception ext) {
-			log.error("Seems Inventory database service unavaible.");
+			logger.error("Seems Inventory database service unavaible.");
 			throw new ApiRuntimeException(500, 500, "Inventory Data base service down.");
 		}
 		if (existingItem.isPresent()) {
-			log.info("Item already present, updating its quantity");
+			logger.info("Item already present, updating its quantity");
 			InventoryItem currentItem = existingItem.get();
 			currentItem.setQuantity(item.getQuantity());
 			if (currentItem.getQuantity() > 0l)
@@ -72,16 +76,16 @@ public class InventoryServiceImpl implements InventoryService {
 			try {
 				return repository.save(currentItem);
 			} catch (Exception ext) {
-				log.error("Seems Inventory database service unavaible.");
+				logger.error("Seems Inventory database service unavaible.");
 				throw new ApiRuntimeException(500, 500, "Inventory Data base service down.");
 			}
 		} else {
-			log.info("Adding/Creating item in inventory");
+			logger.info("Adding/Creating item in inventory");
 			item.setActiveStatus(true);
 			try {
 				return repository.save(item);
 			} catch (Exception ext) {
-				log.error("Seems Inventory database service unavaible.");
+				logger.error("Seems Inventory database service unavaible.");
 				throw new ApiRuntimeException(500, 500, "Inventory Data base service down.");
 			}
 		}
@@ -89,7 +93,7 @@ public class InventoryServiceImpl implements InventoryService {
 
 	public InventoryItem updateInventory(final InventoryItemRequest item) {
 		if (item.getQuantity() < 0) {
-			log.error("Error {} Negative quantity {}", item.getSkuCode(), item.getQuantity());
+			logger.error("Error {} Negative quantity {}", item.getSkuCode(), item.getQuantity());
 			throw new ApiRuntimeException(400, 400, negativeQuantity);
 		}
 		Optional<InventoryItem> existingItem = getInventoryItem(item.getSkuCode());
@@ -99,15 +103,15 @@ public class InventoryServiceImpl implements InventoryService {
 
 			long quantity = currentItem.getQuantity();
 			if (quantity < item.getQuantity()) {
-				log.error("Error {} Insufficient Inventory.", existingItem);
+				logger.error("Error {} Insufficient Inventory.", existingItem);
 				throw new ApiRuntimeException(400, 400, insufficientInventory);
 			}
 			currentItem.setQuantity(quantity - item.getQuantity());
-			log.info("Item is updated in Inventory");
+			logger.info("Item is updated in Inventory");
 			try {
 				return repository.save(currentItem);
 			} catch (Exception ext) {
-				log.error("Seems Inventory database service unavaible.");
+				logger.error("Seems Inventory database service unavaible.");
 				throw new ApiRuntimeException(500, 500, "Inventory Data base service down.");
 			}
 		} else {
@@ -120,7 +124,7 @@ public class InventoryServiceImpl implements InventoryService {
 		try {
 			return repository.findAllByActiveStatus(true);
 		} catch (Exception ext) {
-			log.error("Seems Inventory database service unavaible.");
+			logger.error("Seems Inventory database service unavaible.");
 			throw new ApiRuntimeException(500, 500, "Inventory Data base service down.");
 		}
 	}
