@@ -26,6 +26,14 @@ public class InventoryServiceImpl implements InventoryService {
 
 	@Value("${inventory.product.unavailable.msg}")
 	private String PRODUCT_UNAVAILABLE;
+	
+	@Value("${inventory.negative.quantity.msg}")
+	private String negativeQuantity;
+	
+	@Value("${inventory.insufficient.msg}")
+	private String insufficientInventory;
+	
+	
 
 	public Optional<InventoryItem> getInventoryItem(final String productCode) {
 
@@ -82,7 +90,7 @@ public class InventoryServiceImpl implements InventoryService {
 	public InventoryItem updateInventory(final InventoryItemRequest item) {
 		if (item.getQuantity() < 0) {
 			log.error("Error {} Negative quantity {}", item.getSkuCode(), item.getQuantity());
-			throw new ApiRuntimeException(400, 400, "Negative quantity");
+			throw new ApiRuntimeException(400, 400, negativeQuantity);
 		}
 		Optional<InventoryItem> existingItem = getInventoryItem(item.getSkuCode());
 
@@ -92,7 +100,7 @@ public class InventoryServiceImpl implements InventoryService {
 			long quantity = currentItem.getQuantity();
 			if (quantity < item.getQuantity()) {
 				log.error("Error {} Insufficient Inventory.", existingItem);
-				throw new ApiRuntimeException(400, 400, " Insufficient Inventory.");
+				throw new ApiRuntimeException(400, 400, insufficientInventory);
 			}
 			currentItem.setQuantity(quantity - item.getQuantity());
 			log.info("Item is updated in Inventory");
