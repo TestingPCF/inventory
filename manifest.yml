@@ -4,10 +4,13 @@ applications:
   path: target/inventory-0.0.1-SNAPSHOT.jar
   memory: 1G
   instances: 1
-  services:  - inventoryDB
+  services:
+  - inventoryDB
   - worker-mq
   - cloud-service-registry
   - log-drain
   - appdynamics
   - cloud-config-server
-  routes:   - route: inventory.apps.sandbox.cflab01.in.hclcnlabs.com
+  - zipkin-server2
+  routes: 
+  - route: inventory.apps.sandbox.cflab01.in.hclcnlabs.com
