@@ -10,5 +10,6 @@ applications:
   - cloud-service-registry
   - log-drain
   - cloud-config-server
+  - newrelic
   routes: 
   - route: inventory.apps.sandbox.cflab01.in.hclcnlabs.com
