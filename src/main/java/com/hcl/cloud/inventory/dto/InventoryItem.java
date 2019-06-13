@@ -32,5 +32,11 @@ public class InventoryItem implements Serializable {
 	private String skuCode;
 	private long quantity;
 	private boolean activeStatus;
+	public InventoryItem(String skuCode, long quantity, boolean activeStatus) {
+		super();
+		this.skuCode = skuCode;
+		this.quantity = quantity;
+		this.activeStatus = activeStatus;
+	}
 
 }
