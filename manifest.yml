@@ -13,7 +13,3 @@ applications:
   - newrelic
   routes: 
   - route: inventory.apps.sandbox.cflab01.in.hclcnlabs.com
-  env:
-     JBP_CONFIG_DEBUG: '{enabled: true}'
-     axon.amqp.exchange: ProductEvents
-     axon.eventhandli3ng.processors.amqpEvents.source: complaintEventsMethod
